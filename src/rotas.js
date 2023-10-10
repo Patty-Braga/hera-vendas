@@ -3,12 +3,14 @@ const verificaLogin = require('./filtro/verificaLogin');
 const usuarios = require('./controladores/usuarios');
 const { login } = require('./controladores/login');
 const { listarCategorias } = require('./controladores/categorias');
+const validarRequisicao = require('./intermediarios/validarRequisicao');
+const validacaoUsuario = require('./validacoes/usuario');
 
 const rotas = express();
 
 rotas.get('/categoria', listarCategorias);
 
-rotas.post('/usuario', usuarios.cadastrarUsuario);
+rotas.post('/usuario', validarRequisicao(validacaoUsuario), usuarios.cadastrarUsuario);
 
 rotas.post('/login', login);
 
