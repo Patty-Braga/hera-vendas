@@ -28,7 +28,23 @@ const cadastrarUsuario = async (req, res) => {
 }
 
 const detalharUsuario = async (req, res) => {
+    try {
+        const usuarioAutenticado = req.usuario;
 
+        if (!usuarioAutenticado) {
+            return res.status(404).json({ mensagem: 'Usuário não encontrado' });
+        }
+
+        const { id, nome, email } = usuarioAutenticado;
+
+        return res.status(200).json({
+            id,
+            nome,
+            email,
+        });
+    } catch (error) {
+        return res.status(500).json({ mensagem: 'Ocorreu um erro durante a busca do usuário' });
+    }
 }
 
 const atualizarUsuario = async (req, res) => {
