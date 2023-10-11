@@ -10,9 +10,7 @@ const validacaoLogin = require("./validacoes/login");
 const rotas = express();
 
 rotas.get("/categoria", listarCategorias);
-
-rotas.post("/usuario", validarRequisicao(validacaoUsuario), usuarios.cadastrarUsuario
-);
+rotas.post("/usuario", validarRequisicao(validacaoUsuario), usuarios.cadastrarUsuario);
 
 rotas.post("/login", validarRequisicao(validacaoLogin), login);
 
