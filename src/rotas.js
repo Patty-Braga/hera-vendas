@@ -11,10 +11,7 @@ const rotas = express();
 
 rotas.get("/categoria", listarCategorias);
 
-rotas.post(
-  "/usuario",
-  validarRequisicao(validacaoUsuario),
-  usuarios.cadastrarUsuario
+rotas.post("/usuario", validarRequisicao(validacaoUsuario), usuarios.cadastrarUsuario
 );
 
 rotas.post("/login", validarRequisicao(validacaoLogin), login);
@@ -22,6 +19,6 @@ rotas.post("/login", validarRequisicao(validacaoLogin), login);
 rotas.use(verificaLogin);
 
 rotas.get("/usuario", usuarios.detalharUsuario);
-rotas.put("/usuario", usuarios.atualizarUsuario);
+rotas.put("/usuario", validarRequisicao(validacaoUsuario), usuarios.atualizarUsuario);
 
 module.exports = rotas;

@@ -32,7 +32,40 @@ const detalharUsuario = async (req, res) => {
 }
 
 const atualizarUsuario = async (req, res) => {
+    const { id } = req.usuario;
+    const { nome, email, senha } = req.body;
 
+    try {
+        const usuarioExiste = await knex('usuarios').where({ id }).first();
+
+        if (!usuarioExiste) {
+            return res.status(404).json({ mensagem: 'Usuario não encontrado' });
+        }
+
+        const senhaCriptografada = await bcrypt.hash(senha, 10);
+
+        if (email !== req.usuario.email) {
+            const emailUsuarioExiste = await knex('usuarios')
+                .where({ email })
+                .first();
+
+            if (emailUsuarioExiste) {
+                return res.status(400).json({ mensagem: 'O Email já existe.' });
+            }
+        }
+
+        await knex('usuarios')
+            .where({ id })
+            .update({
+                nome,
+                email,
+                senha: senhaCriptografada,
+            });
+
+        return res.status(201).send({ mensagem: 'Usuário editado com sucesso' });
+    } catch (error) {
+        return res.status(500).json(error.message);
+    }
 }
 
 module.exports = {
