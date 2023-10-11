@@ -9,7 +9,7 @@ const login = async (req, res) => {
     const usuario = await knex("usuarios").where({ email }).first();
 
     if (!usuario) {
-      return res.status(403).json("Email ou Senha inválidos");
+      return res.status(401).json("Email ou Senha inválidos");
     }
 
     const senhaUsuario = await bcrypt.compare(senha, usuario.senha);
@@ -18,7 +18,9 @@ const login = async (req, res) => {
       return res.status(403).json("Email ou Senha inválidos");
     }
 
-    const token = jwt.sign({ id: usuario.id }, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign({ id: usuario.id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: "1h",
+    });
 
     const { senha: _, ...dadosUsuario } = usuario;
     return res.status(200).json({
