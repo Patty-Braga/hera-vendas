@@ -16,7 +16,7 @@
   <p align="center">
     Sistema de PDV desenvolvido pela equipe TechHera como projeto final do Curso de Desenvolvimento Back-end da Cubos Academy.
     <br />
-    <a href="https://github.com/ThamirisMaria/hera-vendas"><strong>Acessar o sistema »</strong></a>
+    <a href="https://agreeable-foal-baseball-cap.cyclic.cloud/"><strong>Acessar o sistema »</strong></a>
     <br />
     <br />
     <a href="https://github.com/ThamirisMaria/hera-vendas/edit/main/README.md#getting-started">Contribuir</a>
