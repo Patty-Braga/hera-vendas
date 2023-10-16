@@ -19,7 +19,7 @@
     <a href="https://agreeable-foal-baseball-cap.cyclic.cloud/"><strong>Acessar o sistema »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/ThamirisMaria/hera-vendas/edit/main/README.md#getting-started">Contribuir</a>
+    <a href="https://github.com/ThamirisMaria/hera-vendas#getting-started">Contribuir</a>
     ·
     <a href="https://github.com/ThamirisMaria/hera-vendas/issues">Reportar Bug</a>
     ·
