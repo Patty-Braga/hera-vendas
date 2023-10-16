@@ -59,7 +59,9 @@ Para obter uma cópia local instalada e funcionando, siga estas etapas.
   ```sh
   npm install npm@latest -g
   ```
-
+* Insomnia:
+  <a href="https://insomnia.rest/download"> faça o download </a>
+  
 ### Instalação
 
 1. Clone este repositório
@@ -70,10 +72,8 @@ Para obter uma cópia local instalada e funcionando, siga estas etapas.
    ```sh
    npm install
    ```
-4. Rode o projeto na sua máquina
-   ```js
-   npm run dev
-   ```
+4. Importe o arquivo `Insomnia_hera-vendas.json` para o Insomnia da sua máquina
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
