@@ -5,7 +5,7 @@ const validacaoUsuario = joi.object({
     .string()
     .min(3)
     .required()
-    .pattern(new RegExp("^[A-Za-z]+( [A-Za-z]+)*$"))
+    .pattern(new RegExp("^[A-Za-z]+( [A-Za-z]+)?$"))
     .messages({
       "any.required": "O campo nome é obrigatório",
       "string.empty": "O campo nome é obrigatório",
