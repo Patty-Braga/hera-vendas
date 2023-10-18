@@ -71,8 +71,10 @@ const atualizarUsuario = async (req, res) => {
       }
     }
 
+    const nomeSemEspacos = nome.trim();
+
     await knex("usuarios").where({ id }).update({
-      nome,
+      nome: nomeSemEspacos,
       email,
       senha: senhaCriptografada,
     });
