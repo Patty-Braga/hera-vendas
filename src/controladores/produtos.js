@@ -2,16 +2,15 @@ const knex = require("../conexao");
 
 const cadastrarProduto = async (req, res) => {
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
-    try {
-        const produtoEncontrado = await knex("produtos").where({}).first();
 
-        if (produtoEncontrado) {
-            return res
-                .status(400)
-                .json({ mensagem: "Este produto já está cadastrado" });
+    try {
+        const listarCategoria = await knex("categorias");
+
+        if (categoria_id > listarCategoria.length) {
+            return res.status(404).json({ mensagem: "A categoria informada não existe, informe uma categoria válida para prosseguir." });
         }
 
-        await knex("usuarios").insert({
+        await knex("produtos").insert({
             descricao,
             quantidade_estoque,
             valor,
