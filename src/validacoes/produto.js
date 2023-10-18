@@ -6,7 +6,7 @@ const validacaoProduto = joi.object({
         .min(5)
         .max(150)
         .required()
-        .pattern(new RegExp("^[A-Za-z]+( [A-Za-z]+)?$"))
+        .pattern(new RegExp(/^(?!.*  )[\p{L}\p{N}\s!@#$%^&*()_+-=,.<>;:'"\\/[\]]*$/u))
         .messages({
             "any.required": "O campo descricao é obrigatório",
             "string.empty": "O campo descricao é obrigatório",
