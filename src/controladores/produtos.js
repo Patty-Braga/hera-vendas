@@ -13,8 +13,10 @@ const cadastrarProduto = async (req, res) => {
             });
         }
 
+        const descricaoSemEspacos = descricao.trim()
+
         await knex("produtos").insert({
-            descricao,
+            descricao: descricaoSemEspacos,
             quantidade_estoque,
             valor,
             categoria_id,
@@ -32,7 +34,6 @@ const editarProduto = async (req, res) => {
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
     const { id } = req.params;
 
-    console.log(id);
     try {
 
         const produtoExiste = await knex("produtos").where({ id }).first();
@@ -41,8 +42,10 @@ const editarProduto = async (req, res) => {
             return res.status(404).json({ mensagem: "Produto não existe ou não pertence ao usuário logado." });
         }
 
+        const descricaoSemEspacos = descricao.trim();
+
         await knex("produtos").where({ id }).update({
-            descricao,
+            descricao: descricaoSemEspacos,
             quantidade_estoque,
             valor,
             categoria_id

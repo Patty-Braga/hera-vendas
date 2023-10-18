@@ -14,8 +14,10 @@ const cadastrarUsuario = async (req, res) => {
 
     const senhaCriptografada = await bcrypt.hash(senha, 10);
 
+    const nomeSemEspacos = nome.trim()
+
     await knex("usuarios").insert({
-      nome,
+      nome: nomeSemEspacos,
       email,
       senha: senhaCriptografada,
     });
@@ -71,10 +73,12 @@ const atualizarUsuario = async (req, res) => {
       }
     }
 
+    const nomeSemEspacos = nome.trim();
+
     await knex("usuarios").where({ id }).update({
-      nome,
+      nome: nomeSemEspacos,
       email,
-      senha: senhaCriptografada,
+      senha: senhaCriptografada
     });
 
     return res.status(201).send({ mensagem: "Usuário editado com sucesso" });
