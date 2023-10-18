@@ -8,6 +8,8 @@ const validacaoUsuario = require("./validacoes/usuario");
 const validacaoLogin = require("./validacoes/login");
 const produtos = require("./controladores/produtos");
 const validacaoProduto = require("./validacoes/produto");
+const cliente = require("./controladores/clientes");
+const validacaoCliente = require("./validacoes/cliente");
 
 const rotas = express();
 
@@ -26,6 +28,11 @@ rotas.put("/produto/:id", validarRequisicao(validacaoProduto), produtos.editarPr
 rotas.get("/produto", produtos.listarProdutos);
 rotas.get("/produto/:id", produtos.detalharProduto);
 rotas.delete("/produto/:id", produtos.excluirProduto);
+
+rotas.post("/cliente", validarRequisicao(validacaoCliente), cliente.cadastrarCliente);
+rotas.put("/cliente/:id", validarRequisicao(validacaoCliente), cliente.editarCliente);
+rotas.get("/cliente", cliente.listarClientes);
+rotas.get("/cliente/:id", cliente.detalharCliente);
 
 module.exports = rotas;
 

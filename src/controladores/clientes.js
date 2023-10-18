@@ -35,18 +35,34 @@ const cadastrarCliente = async (req, res) => {
 };
 
 const listarClientes = async (req, res) => {
-    try {
-      const clientes = await knex.select("*").from("clientes");
-  
-      return res.status(200).json(clientes);
-    } catch (error) {
-      return res.status(500).json({ mensagem: error.message });
-    }
-  };
+  try {
+    const clientes = await knex.select("*").from("clientes");
 
+    return res.status(200).json(clientes);
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message });
+  }
+};
+
+const detalharCliente = async (req, res) => {
+  try {
+
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message });
+  }
+};
+
+const editarCliente = async (req, res) => {
+  try {
+
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message });
+  }
+};
 
 module.exports = {
-    cadastrarCliente,
-    listarClientes,
-  };
-  
+  cadastrarCliente,
+  listarClientes,
+  detalharCliente,
+  editarCliente
+};
