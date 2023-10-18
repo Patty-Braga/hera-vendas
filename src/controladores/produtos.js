@@ -4,9 +4,9 @@ const cadastrarProduto = async (req, res) => {
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
 
     try {
-        const listarCategoria = await knex("categorias");
+        const quantidadeCategoria = await knex("categorias");
 
-        if (categoria_id > listarCategoria.length) {
+        if (categoria_id > quantidadeCategoria.length) {
             return res.status(404).json({ mensagem: "A categoria informada não existe, informe uma categoria válida para prosseguir." });
         }
 
