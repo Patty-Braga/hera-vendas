@@ -9,8 +9,7 @@ const validacaoUsuario = joi.object({
     .messages({
       "any.required": "O campo nome é obrigatório",
       "string.empty": "O campo nome é obrigatório",
-      "string.pattern.base":
-        "O campo nome deve conter apenas caracteres válidos",
+      "string.pattern.base": "O campo nome deve conter apenas caracteres válidos e não deve conter multiplos espaços em branco",
       "string.min": "O campo nome precisa ter, no mínimo, 3 caracteres",
     }),
 
