@@ -36,7 +36,17 @@ const editarProduto = async (req, res) => {
 };
 
 const listarProdutos = async (req, res) => {
+  const { categoria_id } = req.query;
   try {
+    const query = knex.select("*").from("produtos");
+
+    if (categoria_id) {
+      query.where("categoria_id", categoria_id);
+    }
+
+    const listaProdutos = await query;
+
+    return res.status(200).json(listaProdutos);
   } catch (error) {
     return res.status(500).json(error.message);
   }
