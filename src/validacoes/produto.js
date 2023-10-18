@@ -41,4 +41,4 @@ const validacaoProduto = joi.object({
         }),
 });
 
-module.exports = validacaoProduto
+module.exports = validacaoProduto;
