@@ -6,11 +6,13 @@ const validacaoProduto = joi.object({
         .min(5)
         .max(150)
         .required()
+        .pattern(new RegExp("^[A-Za-z]+( [A-Za-z]+)?$"))
         .messages({
             "any.required": "O campo descricao é obrigatório",
             "string.empty": "O campo descricao é obrigatório",
             "string.min": "O campo descricao precisa ter, no mínimo, 5 caracteres",
             "string.max": "O campo descricao precisa ter, no máximo, 150 caracteres",
+            "string.pattern.base": "O campo descricao não deve conter multiplos espaços em branco",
         }),
     quantidade_estoque: joi
         .number()

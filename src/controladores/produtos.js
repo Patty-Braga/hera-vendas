@@ -30,23 +30,24 @@ const cadastrarProduto = async (req, res) => {
 
 const editarProduto = async (req, res) => {
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
-    const { id } = req.usuario;
+    const { id } = req.params;
+
     try {
 
-        const produtoExiste = await knex("produtos").where({ categoria_id }).first();
+        const produtoExiste = await knex("produtos").where({ id }).first();
 
         if (!produtoExiste) {
-            return res.status(404).json({ mensagem: "Produto não existe ou não pertence ao usuário logado." });
+            return res.status(404).json({ mensagem: "Produto não cadastrado." });
         }
 
-        await knex("produtos").insert({
+        await knex("produtos").where({ id }).update({
             descricao,
             quantidade_estoque,
             valor,
             categoria_id
         });
 
-        return res.status(201).json({ mensagem: "Produto cadastrado com sucesso!" });
+        return res.status(201).json({ mensagem: "Produto alterado com sucesso!" });
     } catch (error) {
         return res.status(500).json(error.message);
     }
