@@ -33,4 +33,4 @@ const validacaoUsuario = joi.object({
     }),
 });
 
-module.exports = validacaoUsuario;
+module.exports = validacaoUsuario
