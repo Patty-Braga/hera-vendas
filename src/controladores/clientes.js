@@ -1,8 +1,7 @@
 const knex = require("../conexao");
-// const jwt = require('jsonwebtoken');
 
 const cadastrarCliente = async (req, res) => {
-  const { nome, email, cpf } = req.body;
+  const { nome, email, cpf, cep, numero } = req.body;
   try {
     const clienteEmail = await knex("clientes").where({ email }).first();
 
@@ -23,7 +22,7 @@ const cadastrarCliente = async (req, res) => {
     await knex("clientes").insert({
       nome,
       email,
-      cpf
+      cpf,
     });
 
     return res
@@ -48,10 +47,14 @@ const detalharCliente = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const clienteEncontrado = await knex.select("*").from("clientes").where({ id }).first();
+    const clienteEncontrado = await knex
+      .select("*")
+      .from("clientes")
+      .where({ id })
+      .first();
 
     if (!clienteEncontrado) {
-      return res.status(404).json({ mensagem: 'Cliente não encontrado' });
+      return res.status(404).json({ mensagem: "Cliente não encontrado" });
     }
 
     return res.status(200).json(clienteEncontrado);
@@ -62,36 +65,36 @@ const detalharCliente = async (req, res) => {
 
 const editarCliente = async (req, res) => {
   try {
-
     const { id } = req.params;
     const { nome, email, cpf } = req.body;
 
-    const clienteExistente = await knex('clientes').where({ id }).first();
+    const clienteExistente = await knex("clientes").where({ id }).first();
 
     if (!clienteExistente) {
-        return res.status(404).json({ mensagem: 'Cliente não encontrado' });
+      return res.status(404).json({ mensagem: "Cliente não encontrado" });
     }
 
-    if (!nome || !email || !cpf) {
-        return res.status(400).json({ mensagem: 'Todos os dados são obrigatórios' });
-    }
-
-    const emailExiste = await knex('clientes').where('email', email).whereNot('id', id).first();
+    const emailExiste = await knex("clientes")
+      .where("email", email)
+      .whereNot("id", id)
+      .first();
     if (emailExiste) {
-        return res.status(400).json({ mensagem: 'Email ou CPF inválido' });
+      return res.status(400).json({ mensagem: "Email ou CPF inválido" });
     }
 
-    const cpfExiste = await knex('clientes').where('cpf', cpf).whereNot('id', id).first();
+    const cpfExiste = await knex("clientes")
+      .where("cpf", cpf)
+      .whereNot("id", id)
+      .first();
     if (cpfExiste) {
-        return res.status(400).json({ mensagem: 'Email ou CPF inválido' });
+      return res.status(400).json({ mensagem: "Email ou CPF inválido" });
     }
 
     const clienteAtualizado = { nome, email, cpf };
 
-    await knex('clientes').where({ id }).update(clienteAtualizado);
+    await knex("clientes").where({ id }).update(clienteAtualizado);
 
-    return res.json({ mensagem: 'Dados atualizados com sucesso' });
-
+    return res.json({ mensagem: "Dados atualizados com sucesso" });
   } catch (error) {
     return res.status(500).json({ mensagem: error.message });
   }
@@ -101,5 +104,5 @@ module.exports = {
   cadastrarCliente,
   listarClientes,
   detalharCliente,
-  editarCliente
+  editarCliente,
 };
