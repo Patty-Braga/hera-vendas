@@ -106,6 +106,19 @@ const detalharProduto = async (req, res) => {
 
 const excluirProduto = async (req, res) => {
   try {
+
+    const { id } = req.params;
+
+        const produto = await knex('produtos').where({ id }).first();
+
+        if (!produto) {
+            return res.status(404).json({ error: 'Produto não encontrado' });
+        }
+
+        await knex('produtos').where({ id }).del();
+
+        return res.json({ message: 'Produto excluído com sucesso' });
+
   } catch (error) {
     return res.status(500).json(error.message);
   }
