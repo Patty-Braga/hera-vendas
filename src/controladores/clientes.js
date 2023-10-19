@@ -68,9 +68,9 @@ const listarClientes = async (req, res) => {
 };
 
 const detalharCliente = async (req, res) => {
-  try {
-    const { id } = req.params;
+  const { id } = req.params;
 
+  try {
     const clienteEncontrado = await knex
       .select("*")
       .from("clientes")
