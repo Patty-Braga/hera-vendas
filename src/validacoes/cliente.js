@@ -18,17 +18,18 @@ const validacaoCliente = joi.object({
         "string.empty": "O campo email é obrigatório",
         "string.email": "O campo email precisa ser um email válido",
     }),
-    senha: joi
-        .string()
-        .min(5)
+    cpf: joi
+        .number()
+        .integer()
         .required()
-        .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%^&*])"))
+        .min(10000000000)
+        .max(99999999999)
         .messages({
-            "any.required": "O campo senha é obrigatório",
-            "string.empty": "O campo senha é obrigatório",
-            "string.min": "O campo senha precisa ter, no mínimo, 5 caracteres",
-            "string.pattern.base":
-                "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial",
+            'number.base': 'O CPF deve ser um número',
+            'number.integer': 'O CPF deve ser um número inteiro',
+            'number.min': 'O CPF deve ter exatamente 11 dígitos',
+            'number.max': 'O CPF deve ter exatamente 11 dígitos',
+            'any.required': 'O CPF é obrigatório',
         }),
 });
 
