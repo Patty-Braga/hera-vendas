@@ -19,17 +19,14 @@ const validacaoCliente = joi.object({
         "string.email": "O campo email precisa ser um email válido",
     }),
     cpf: joi
-        .number()
-        .integer()
+        .string()
         .required()
-        .min(10000000000)
-        .max(99999999999)
+        .regex(/^\d{11}$/)
         .messages({
-            'number.base': 'O CPF deve ser um número',
-            'number.integer': 'O CPF deve ser um número inteiro',
-            'number.min': 'O CPF deve ter exatamente 11 dígitos',
-            'number.max': 'O CPF deve ter exatamente 11 dígitos',
-            'any.required': 'O CPF é obrigatório',
+            "any.required": "O campo CPF é obrigatório",
+            "string.empty": "O campo CPF é obrigatório",
+            'string.length': 'O CPF deve ter exatamente 11 dígitos',
+            'string.pattern.base': 'O CPF deve conter apenas dígitos numéricos',
         }),
 });
 
