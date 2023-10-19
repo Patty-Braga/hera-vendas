@@ -94,7 +94,7 @@ const editarCliente = async (req, res) => {
 
     await knex("clientes").where({ id }).update(clienteAtualizado);
 
-    return res.json({ mensagem: "Dados atualizados com sucesso" });
+    return res.status(200).json({ mensagem: "Dados atualizados com sucesso" });
   } catch (error) {
     return res.status(500).json({ mensagem: error.message });
   }
