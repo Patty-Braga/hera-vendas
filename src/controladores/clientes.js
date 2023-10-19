@@ -88,10 +88,9 @@ const detalharCliente = async (req, res) => {
 };
 
 const editarCliente = async (req, res) => {
+  const { id } = req.params;
+  const { nome, email, cpf } = req.body;
   try {
-    const { id } = req.params;
-    const { nome, email, cpf } = req.body;
-
     const clienteExistente = await knex("clientes").where({ id }).first();
 
     if (!clienteExistente) {
