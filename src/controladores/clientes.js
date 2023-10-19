@@ -1,16 +1,10 @@
 const knex = require("../conexao");
+const axios = require("axios");
 
 const cadastrarCliente = async (req, res) => {
   const { nome, email, cpf, cep, numero } = req.body;
   try {
     const clienteEmail = await knex("clientes").where({ email }).first();
-
-    if (clienteEmail) {
-      return res
-        .status(400)
-        .json({ mensagem: "Este email já pertence a outro cliente" });
-    }
-
     const clienteCpf = await knex("clientes").where({ cpf }).first();
 
     if (clienteCpf) {
@@ -19,10 +13,40 @@ const cadastrarCliente = async (req, res) => {
         .json({ mensagem: "Este CPF já pertence a outro cliente" });
     }
 
+    if (clienteEmail) {
+      return res
+        .status(400)
+        .json({ mensagem: "Este email já pertence a outro cliente" });
+    }
+
+    if (cep) {
+      const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json`);
+      if (data.erro === true) {
+        return res.status(404).json({ mensagem: "Cep não existe" });
+      }
+      await knex("clientes").insert({
+        nome,
+        email,
+        cpf,
+        cep,
+        rua: data.logradouro,
+        numero,
+        bairro: data.bairro,
+        cidade: data.localidade,
+        estado: data.uf,
+      });
+
+      return res
+        .status(201)
+        .json({ mensagem: "Cliente cadastrado com sucesso!" });
+    }
+
     await knex("clientes").insert({
       nome,
       email,
       cpf,
+      cep,
+      numero,
     });
 
     return res
