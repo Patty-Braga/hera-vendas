@@ -6,6 +6,16 @@ const cadastrarProduto = async (req, res) => {
   try {
     const quantidadeCategoria = await knex("categorias");
 
+    const produtos = await knex("produtos").where({ descricao }).first();
+
+    if (descricao !== produtos) {
+      const produtoExiste = await knex("produtos").where({ descricao }).first();
+
+      if (produtoExiste) {
+        return res.status(400).json({ mensagem: "A Descrição já existe." });
+      }
+    }
+
     if (categoria_id > quantidadeCategoria.length) {
       return res.status(404).json({
         mensagem:
@@ -36,6 +46,16 @@ const editarProduto = async (req, res) => {
 
   try {
     const produtoExiste = await knex("produtos").where({ id }).first();
+
+    const produtos = await knex("produtos").where({ descricao }).first();
+
+    if (descricao !== produtos) {
+      const produtoExiste = await knex("produtos").where({ descricao }).first();
+
+      if (produtoExiste) {
+        return res.status(400).json({ mensagem: "A Descrição já existe." });
+      }
+    }
 
     if (!produtoExiste) {
       return res.status(404).json({
@@ -109,15 +129,15 @@ const excluirProduto = async (req, res) => {
 
     const { id } = req.params;
 
-        const produto = await knex('produtos').where({ id }).first();
+    const produto = await knex('produtos').where({ id }).first();
 
-        if (!produto) {
-            return res.status(404).json({ error: 'Produto não encontrado' });
-        }
+    if (!produto) {
+      return res.status(404).json({ error: 'Produto não encontrado' });
+    }
 
-        await knex('produtos').where({ id }).del();
+    await knex('produtos').where({ id }).del();
 
-        return res.status(200).json({ message: 'Produto excluído com sucesso' });
+    return res.status(200).json({ message: 'Produto excluído com sucesso' });
 
   } catch (error) {
     return res.status(500).json(error.message);
