@@ -117,7 +117,7 @@ const excluirProduto = async (req, res) => {
 
         await knex('produtos').where({ id }).del();
 
-        return res.json({ message: 'Produto excluído com sucesso' });
+        return res.status(200).json({ message: 'Produto excluído com sucesso' });
 
   } catch (error) {
     return res.status(500).json(error.message);
