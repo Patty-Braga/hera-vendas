@@ -62,9 +62,7 @@ const atualizarUsuario = async (req, res) => {
     const senhaCriptografada = await bcrypt.hash(senha, 10);
 
     if (email !== req.usuario.email) {
-      const emailUsuarioExiste = await knex("usuarios")
-        .where({ email })
-        .first();
+      const emailUsuarioExiste = await knex("usuarios").where({ email }).first();
 
       if (emailUsuarioExiste) {
         return res.status(400).json({ mensagem: "O Email já existe." });
