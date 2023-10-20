@@ -8,11 +8,12 @@ const cadastrarProduto = async (req, res) => {
 
     const produtos = await knex("produtos").where({ descricao }).first();
 
+
     if (descricao !== produtos) {
       const produtoExiste = await knex("produtos").where({ descricao }).first();
 
       if (produtoExiste) {
-        return res.status(400).json({ mensagem: "A Descrição já existe." });
+        return res.status(400).json({ mensagem: "Produto já cadastrado." });
       }
     }
 
@@ -45,22 +46,12 @@ const editarProduto = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const produtoExiste = await knex("produtos").where({ id }).first();
-
-    const produtos = await knex("produtos").where({ descricao }).first();
-
-    if (descricao !== produtos) {
-      const produtoExiste = await knex("produtos").where({ descricao }).first();
-
-      if (produtoExiste) {
-        return res.status(400).json({ mensagem: "A Descrição já existe." });
-      }
-    }
-
-    if (!produtoExiste) {
-      return res.status(404).json({
-        mensagem: "Produto não encontrado",
-      });
+    const produtoExiste = await knex("produtos")
+      .where("descricao", descricao)
+      .whereNot("id", id)
+      .first();
+    if (produtoExiste) {
+      return res.status(400).json({ mensagem: "Descrição pertence a outro produto" });
     }
 
     const descricaoSemEspacos = descricao.trim();
