@@ -61,7 +61,7 @@ const editarProduto = async (req, res) => {
       quantidade_estoque,
       valor,
       categoria_id,
-    });
+    })
 
     return res.status(201).json({ mensagem: "Produto alterado com sucesso!" });
   } catch (error) {
