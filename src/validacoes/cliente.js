@@ -30,14 +30,18 @@ const validacaoCliente = joi.object({
     }),
   cep: joi
     .string()
+    .allow(null, "")
     .regex(/^\d{8}$/)
     .messages({
-      "string.empty": "O campo CEP não pode estar vazio",
-      "string.pattern.base": "O Cep deve ter exatamente 8 dígitos e conter apenas caracteres numéricos",
+      "string.pattern.base": "O Cep deve ter, exatamente, 8 dígitos e conter apenas caracteres numéricos",
     }),
-  numero: joi.string().max(10).messages({
-    "string.empty": "O campo CEP não pode estar vazio",
-  }),
+  numero: joi
+    .string()
+    .allow(null, "")
+    .max(10)
+    .messages({
+      "string.max": "O campo numero pode conter até 10 caracteres",
+    }),
 });
 
 module.exports = validacaoCliente;
