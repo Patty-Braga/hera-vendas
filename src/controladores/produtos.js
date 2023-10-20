@@ -52,7 +52,7 @@ const editarProduto = async (req, res) => {
     }
 
     const produtoExiste = await knex("produtos")
-      .where("descricao", descricao.trim())
+      .whereRaw("LOWER(descricao) = ?", [descricao.trim().toLowerCase()])
       .whereNot("id", id)
       .first();
 
