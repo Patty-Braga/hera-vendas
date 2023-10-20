@@ -88,24 +88,34 @@ const detalharCliente = async (req, res) => {
 };
 
 const editarCliente = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { nome, email, cpf, cep, numero } = req.body;
+  const { id } = req.params;
+  const { nome, email, cpf, cep, numero } = req.body;
 
-    const clienteExistente = await knex('clientes').where({ id }).first();
+  try {
+    const clienteExistente = await knex("clientes").where({ id }).first();
 
     if (!clienteExistente) {
-      return res.status(404).json({ mensagem: 'Cliente não encontrado' });
+      return res.status(404).json({ mensagem: "Cliente não encontrado" });
     }
 
-    const emailExiste = await knex('clientes').where('email', email).whereNot('id', id).first();
+    const emailExiste = await knex("clientes")
+      .where("email", email)
+      .whereNot("id", id)
+      .first();
     if (emailExiste) {
-      return res.status(400).json({ mensagem: 'Email já pertence a outro cliente' });
+      return res
+        .status(400)
+        .json({ mensagem: "Email já pertence a outro cliente" });
     }
 
-    const cpfExiste = await knex('clientes').where('cpf', cpf).whereNot('id', id).first();
+    const cpfExiste = await knex("clientes")
+      .where("cpf", cpf)
+      .whereNot("id", id)
+      .first();
     if (cpfExiste) {
-      return res.status(400).json({ mensagem: 'CPF já pertence a outro cliente' });
+      return res
+        .status(400)
+        .json({ mensagem: "CPF já pertence a outro cliente" });
     }
 
     const clienteAtualizado = {
@@ -120,7 +130,9 @@ const editarCliente = async (req, res) => {
       const { data } = response;
 
       if (data.erro) {
-        return res.status(400).json({ mensagem: 'CEP inválido ou não encontrado' });
+        return res
+          .status(400)
+          .json({ mensagem: "CEP inválido ou não encontrado" });
       }
 
       clienteAtualizado.cep = cep;
@@ -130,9 +142,9 @@ const editarCliente = async (req, res) => {
       clienteAtualizado.estado = data.uf;
     }
 
-    await knex('clientes').where({ id }).update(clienteAtualizado);
+    await knex("clientes").where({ id }).update(clienteAtualizado);
 
-    return res.status(200).json({ mensagem: 'Dados atualizados com sucesso' });
+    return res.status(200).json({ mensagem: "Dados atualizados com sucesso" });
   } catch (error) {
     return res.status(500).json({ mensagem: error.message });
   }
