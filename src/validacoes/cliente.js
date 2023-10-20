@@ -26,14 +26,14 @@ const validacaoCliente = joi.object({
     .messages({
       "any.required": "O campo CPF é obrigatório",
       "string.empty": "O campo CPF é obrigatório",
-      "string.length": "O CPF deve ter exatamente 11 dígitos",
+      "string.pattern.base": "O campo CPF deve ter exatamente 11 números e conter apenas caracteres numéricos",
     }),
   cep: joi
     .string()
     .regex(/^\d{8}$/)
     .messages({
       "string.empty": "O campo CEP não pode estar vazio",
-      "string.length": "O Cep deve ter exatamente 8 dígitos",
+      "string.pattern.base": "O Cep deve ter exatamente 8 dígitos e conter apenas caracteres numéricos",
     }),
   numero: joi.string().max(10).messages({
     "string.empty": "O campo CEP não pode estar vazio",
