@@ -6,14 +6,12 @@ const cadastrarProduto = async (req, res) => {
   try {
     const quantidadeCategoria = await knex("categorias");
 
-    const produtos = await knex("produtos").where({ descricao }).first();
+    const produtoExiste = await knex("produtos")
+      .whereRaw("LOWER(descricao) = ? ", [descricao.trim().toLowerCase()])
+      .first();
 
-    if (descricao !== produtos) {
-      const produtoExiste = await knex("produtos").where({ descricao }).first();
-
-      if (produtoExiste) {
-        return res.status(400).json({ mensagem: "Produto já cadastrado." });
-      }
+    if (produtoExiste) {
+      return res.status(400).json({ mensagem: "Produto já cadastrado." });
     }
 
     if (categoria_id > quantidadeCategoria.length) {
@@ -23,10 +21,8 @@ const cadastrarProduto = async (req, res) => {
       });
     }
 
-    const descricaoSemEspacos = descricao.trim();
-
     await knex("produtos").insert({
-      descricao: descricaoSemEspacos,
+      descricao: descricao.trim(),
       quantidade_estoque,
       valor,
       categoria_id,
