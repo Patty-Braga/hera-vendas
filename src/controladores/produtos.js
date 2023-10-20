@@ -8,7 +8,6 @@ const cadastrarProduto = async (req, res) => {
 
     const produtos = await knex("produtos").where({ descricao }).first();
 
-
     if (descricao !== produtos) {
       const produtoExiste = await knex("produtos").where({ descricao }).first();
 
@@ -46,22 +45,29 @@ const editarProduto = async (req, res) => {
   const { id } = req.params;
 
   try {
+    const produto = await knex("produtos").where({ id }).first();
+
+    if (!produto) {
+      return res.status(404).json({ error: "Produto não encontrado" });
+    }
+
     const produtoExiste = await knex("produtos")
       .where("descricao", descricao)
       .whereNot("id", id)
       .first();
+
     if (produtoExiste) {
-      return res.status(400).json({ mensagem: "Descrição pertence a outro produto" });
+      return res
+        .status(400)
+        .json({ mensagem: "Descrição pertence a outro produto" });
     }
 
-    const descricaoSemEspacos = descricao.trim();
-
     await knex("produtos").where({ id }).update({
-      descricao: descricaoSemEspacos,
+      descricao: descricao.trim(),
       quantidade_estoque,
       valor,
       categoria_id,
-    })
+    });
 
     return res.status(201).json({ mensagem: "Produto alterado com sucesso!" });
   } catch (error) {
@@ -117,19 +123,17 @@ const detalharProduto = async (req, res) => {
 
 const excluirProduto = async (req, res) => {
   try {
-
     const { id } = req.params;
 
-    const produto = await knex('produtos').where({ id }).first();
+    const produto = await knex("produtos").where({ id }).first();
 
     if (!produto) {
-      return res.status(404).json({ error: 'Produto não encontrado' });
+      return res.status(404).json({ error: "Produto não encontrado" });
     }
 
-    await knex('produtos').where({ id }).del();
+    await knex("produtos").where({ id }).del();
 
-    return res.status(200).json({ message: 'Produto excluído com sucesso' });
-
+    return res.status(200).json({ message: "Produto excluído com sucesso" });
   } catch (error) {
     return res.status(500).json(error.message);
   }
