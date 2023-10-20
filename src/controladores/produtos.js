@@ -118,9 +118,8 @@ const detalharProduto = async (req, res) => {
 };
 
 const excluirProduto = async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-
     const produto = await knex("produtos").where({ id }).first();
 
     if (!produto) {
