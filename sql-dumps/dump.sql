@@ -42,3 +42,20 @@ CREATE TABLE clientes (
   cidade varchar(255),
   estado varchar(255)
 );
+
+CREATE TABLE pedidos (
+	id serial primary key,
+  cliente_id int REFERENCES clientes (id),
+  observacao varchar(255),
+  valor_total int
+);
+
+CREATE TABLE pedido_produtos (
+	id serial primary key,
+  pedido_id int REFERENCES pedidos (id),
+  produto_id int REFERENCES produtos (id),
+  quantidade_produto int,
+  valor_produto int
+);
+
+ALTER TABLE produtos add column produto_imagem varchar(255);
