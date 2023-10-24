@@ -1,6 +1,16 @@
 const joi = require("joi");
 
-const validacaoEditarProduto = joi.object({
+const validarCadastro = async (schema, req, res) => {
+    try {
+        return await schema.validateAsync(req.body)
+    } catch (error) {
+        return res.status(400).json({
+            mensagem: error.message
+        })
+    }
+}
+
+const validacaoCadastrarProduto = joi.object({
     descricao: joi
         .string()
         .min(5)
@@ -40,9 +50,20 @@ const validacaoEditarProduto = joi.object({
             "any.required": "O campo categoria_id é obrigatório",
             "number.base": "A campo categoria_id deve ser um número",
             "number.integer": "A campo categoria_id deve ser um número inteiro",
-        })
+        }),
+    // produto_imagem: joi
+    //     .string()
+    //     .required()
+    //     .regex(/.*\.(jpg|jpeg|png|gif|bmp)$/)
+    //     .messages({
+    //         "any.required": "O campo produto_imagem é obrigatório",
+    //         "string.empty": "O campo produto_imagem é obrigatório",
+    //         "string.pattern.base": "O campo produto_imagem deve conter um arquivo de imagem válido. (com extensão .jpg, .jpeg, .png, .gif ou .bmp)."
+    //     })
+
 });
 
 module.exports = {
-    validacaoEditarProduto
-};
+    validarCadastro,
+    validacaoCadastrarProduto
+}
