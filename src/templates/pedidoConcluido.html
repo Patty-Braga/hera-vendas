@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirmação de Pedido</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header {
+        background-color: #007bff;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px 0;
+      }
+
+      h1 {
+        color: #ffffff;
+      }
+
+      p {
+        color: #333;
+      }
+
+      strong {
+        color: #007bff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="header">
+      <h1>Prezado(a) {{nomeCliente}},</h1>
+    </div>
+    <p>
+      Ficamos felizes em informar que o seu pedido número
+      <strong>{{numeroPedido}}</strong> foi efetuado com sucesso.
+    </p>
+    <p>Obrigado por escolher a Hera Vendas!</p>
+    <p>
+      Se você tiver alguma dúvida ou precisar de assistência, por favor, não
+      hesite em entrar em contato conosco.
+    </p>
+    <div class="footer">
+      <h3>Atenciosamente,</h3>
+      <h2><strong>Hera Vendas</strong></h2>
+    </div>
+  </body>
+</html>
