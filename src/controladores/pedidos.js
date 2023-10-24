@@ -1,4 +1,6 @@
+const transportador = require("../services/nodemailer");
 const knex = require("../conexao");
+const compiladorHtml = require("../utils/compiladorHtml");
 
 const cadastrarPedido = async (req, res) => {
   const { cliente_id, pedido_produtos, observacao } = req.body;
@@ -63,6 +65,17 @@ const cadastrarPedido = async (req, res) => {
       .update("valor_total", valorTotalPedido)
       .where("id", pedido[0].id)
       .returning("*");
+
+    const html = await compiladorHtml("./src/templates/pedidoConcluido.html", {
+      nomeCliente: clienteExiste.nome,
+    });
+
+    transportador.sendMail({
+      from: `${process.env.EMAIL_NAME} <${process.env.EMAIL_FROM}>`,
+      to: `${clienteExiste.nome} <${clienteExiste.email}>`,
+      subject: "Tentativa de Login",
+      html,
+    });
 
     return res.status(201).json({ mensagem: "Pedido cadastrado com sucesso!" });
   } catch (error) {
