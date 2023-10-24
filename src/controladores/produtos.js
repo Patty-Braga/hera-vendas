@@ -10,8 +10,7 @@ const cadastrarProduto = async (req, res) => {
 
 
   try {
-    const validade = await validarCadastro(validacaoCadastrarProduto, req, res)
-    console.log(validade);
+    await validarCadastro(validacaoCadastrarProduto, req, res)
     const quantidadeCategoria = await knex("categorias");
 
     const produtoExiste = await knex("produtos")
