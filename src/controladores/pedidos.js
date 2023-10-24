@@ -72,6 +72,7 @@ const cadastrarPedido = async (req, res) => {
 
 const listarPedidos = async (req, res) => {
   const { cliente_id } = req.query;
+
   try {
     if (cliente_id) {
       const pedidos = await knex("pedidos")
@@ -96,17 +97,24 @@ const listarPedidos = async (req, res) => {
       }));
 
       return res.json({
-        pedido_id: pedidos[0].pedido_id,
-        valor_total: pedidos[0].valor_total,
-        observacao: pedidos[0].observacao,
-        cliente_id: pedidos[0].cliente_id,
-        pedido_produtos: produtos,
+        pedido: {
+          pedido_id: pedidos[0].pedido_id,
+          valor_total: pedidos[0].valor_total,
+          observacao: pedidos[0].observacao,
+          cliente_id: pedidos[0].cliente_id,
+        },
+        pedido_produtos: [
+          {
+            pedido_produtos: produtos,
+          }
+        ]
       });
     }
   } catch (error) {
     return res.status(500).json(error.message);
   }
 };
+
 
 module.exports = {
   cadastrarPedido,

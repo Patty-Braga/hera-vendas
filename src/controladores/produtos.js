@@ -1,5 +1,7 @@
 const knex = require("../conexao");
+const { validarCadastro, validacaoCadastrarProduto } = require('../validacoes/validaUpload')
 const { uploadImagem } = require("../upload");
+
 
 const cadastrarProduto = async (req, res) => {
   const { id } = req.usuario;
@@ -8,6 +10,8 @@ const cadastrarProduto = async (req, res) => {
 
 
   try {
+    const validade = await validarCadastro(validacaoCadastrarProduto, req, res)
+    console.log(validade);
     const quantidadeCategoria = await knex("categorias");
 
     const produtoExiste = await knex("produtos")

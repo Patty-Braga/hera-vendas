@@ -14,6 +14,7 @@ const validacaoCliente = require("./validacoes/cliente");
 const validacaoPedido = require("./validacoes/pedido");
 const multer = require("./filtro/multer");
 
+
 const rotas = express();
 
 rotas.get("/categoria", listarCategorias);
@@ -26,7 +27,7 @@ rotas.use(verificaLogin);
 rotas.get("/usuario", usuarios.detalharUsuario);
 rotas.put("/usuario", validarRequisicao(validacaoUsuario), usuarios.atualizarUsuario);
 
-rotas.post("/produto", multer.single('produto_imagem'), validarRequisicao(validacaoCadastrarProduto), produtos.cadastrarProduto);
+rotas.post("/produto", multer.single('produto_imagem'), produtos.cadastrarProduto);
 rotas.put("/produto/:id", validarRequisicao(validacaoEditarProduto), produtos.editarProduto);
 rotas.get("/produto", produtos.listarProdutos);
 rotas.get("/produto/:id", produtos.detalharProduto);
@@ -39,5 +40,6 @@ rotas.get("/cliente/:id", cliente.detalharCliente);
 
 rotas.post("/pedido", validarRequisicao(validacaoPedido), pedidos.cadastrarPedido);
 rotas.get("/pedido", pedidos.listarPedidos);
+
 
 module.exports = rotas;
