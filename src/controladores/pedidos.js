@@ -1,13 +1,13 @@
 const knex = require("../conexao");
 
-const cadastrarPedido = () => {
+const cadastrarPedido = async (req, res) => {
   try {
   } catch (error) {
     return res.status(500).json(error.message);
   }
 };
 
-const listarPedidos = () => {
+const listarPedidos = async (req, res) => {
   try {
   } catch (error) {
     return res.status(500).json(error.message);
