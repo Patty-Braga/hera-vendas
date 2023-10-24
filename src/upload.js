@@ -1,36 +1,28 @@
-require('dotenv').config();
-const cloudinary = require('cloudinary').v2;
-const fs = require('fs');
+const aws = require('aws-sdk')
 
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.CLOUD_KEY,
-    api_secret: process.env.CLOUD_SECRET
-});
+const endpoint = new aws.Endpoint(process.env.ENDPOINT_BACKBLAZE)
 
+const s3 = new aws.S3({
+    endpoint,
+    credentials: {
+        accessKeyId: process.env.KEY_ID,
+        secretAccessKey: process.env.APP_KEY
+    }
+})
 
-const uploadImagem = async (req, res) => {
-    const { produto_imagem } = req.body
+const uploadImagem = async (path, buffer, mimetype) => {
+    const imagem = await s3.upload({
+        Bucket: process.env.BUCKET_NAME,
+        Key: path,
+        Body: buffer,
+        ContentType: mimetype
+    }).promise()
 
-    try {
-        const imagemBuffer = fs.readFileSync(produto_imagem);
-
-        const resultado = await cloudinary.uploader.upload(imagemBuffer, {
-            resource_type: 'auto'
-        });
-        console.log('Upload bem sucedido:', resultado);
-
-        return resultado
-
-    } catch (error) {
-        return res.status(500).json(error.message);
+    return {
+        path: imagem.Key,
+        url: `https://${process.env.BUCKET_NAME}.${process.env.ENDPOINT_BACKBLAZE}/${imagem.Key}`
     }
 }
-
-module.exports = uploadImagem
-
-// const imagem = './imagens-cadastro-produtos/Screenshot_1.png'
-
-// cloudinary.uploader.upload(imagem).then(result => {
-//     console.log(result.secure_url);
-// })
+module.exports = {
+    uploadImagem,
+}

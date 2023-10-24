@@ -12,9 +12,7 @@ const cliente = require("./controladores/clientes");
 const pedidos = require("./controladores/pedidos");
 const validacaoCliente = require("./validacoes/cliente");
 const validacaoPedido = require("./validacoes/pedido");
-const upload = require("./filtro/multer");
-
-
+const multer = require("./filtro/multer");
 
 const rotas = express();
 
@@ -28,7 +26,7 @@ rotas.use(verificaLogin);
 rotas.get("/usuario", usuarios.detalharUsuario);
 rotas.put("/usuario", validarRequisicao(validacaoUsuario), usuarios.atualizarUsuario);
 
-rotas.post("/produto", upload.single('produto_imagem'), validarRequisicao(validacaoProduto), produtos.cadastrarProduto);
+rotas.post("/produto", multer.single('produto_imagem'), produtos.cadastrarProduto);
 rotas.put("/produto/:id", validarRequisicao(validacaoProduto), produtos.editarProduto);
 rotas.get("/produto", produtos.listarProdutos);
 rotas.get("/produto/:id", produtos.detalharProduto);
