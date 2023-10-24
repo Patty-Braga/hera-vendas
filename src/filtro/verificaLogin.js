@@ -4,7 +4,6 @@ const knex = require("../conexao");
 
 const verificaLogin = async (req, res, next) => {
   const { authorization } = req.headers;
-
   if (!authorization) {
     return res.status(401).json({ mensagem: "Usuário não está autenticado" });
   }
