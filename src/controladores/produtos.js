@@ -1,7 +1,11 @@
 const knex = require("../conexao");
+const { uploadImagem } = require("../upload");
 
 const cadastrarProduto = async (req, res) => {
+  const { id } = req.usuario;
   const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
+  const { originalname, mimetype, buffer } = req.file
+
 
   try {
     const quantidadeCategoria = await knex("categorias");
@@ -21,16 +25,34 @@ const cadastrarProduto = async (req, res) => {
       });
     }
 
-    await knex("produtos").insert({
+    let produto = await knex("produtos").insert({
       descricao: descricao.trim(),
       quantidade_estoque,
       valor,
       categoria_id,
-    });
+    }).returning('*');
 
-    return res
-      .status(201)
-      .json({ mensagem: "Produto cadastrado com sucesso!" });
+    const id = produto[0].id
+
+    const imagem = await uploadImagem(
+      `produtos/${id}/${originalname}`,
+      buffer,
+      mimetype
+    )
+
+    produto = await knex('produtos').update({
+      produto_imagem: imagem.url
+    }).where({ id }).returning('*')
+
+    const produtoCadastrado = {
+      descricao,
+      quantidade_estoque,
+      valor,
+      categoria_id,
+      produto_imagem: imagem.url
+    }
+
+    return res.status(200).json(produtoCadastrado);
   } catch (error) {
     return res.status(500).json(error.message);
   }
