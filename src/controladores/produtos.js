@@ -1,7 +1,9 @@
 const knex = require("../conexao");
+const cloudinary = require("cloudinary").v2;
 
 const cadastrarProduto = async (req, res) => {
   const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
+  const { files } = req;
 
   try {
     const quantidadeCategoria = await knex("categorias");
@@ -21,16 +23,24 @@ const cadastrarProduto = async (req, res) => {
       });
     }
 
+    let produto_imagemUrl = null;
+
+    if (files.produto_imagem) {
+      // Faz o upload da imagem para o Cloudinary
+      const result = await cloudinary.uploader.upload(files.produto_imagem.path);
+
+      // Obtém a URL da imagem enviada para o Cloudinary
+      produto_imagemUrl = result.secure_url;
+    }
     await knex("produtos").insert({
       descricao: descricao.trim(),
       quantidade_estoque,
       valor,
       categoria_id,
+      produto_imagem: produto_imagemUrl,
     });
 
-    return res
-      .status(201)
-      .json({ mensagem: "Produto cadastrado com sucesso!" });
+    return res.status(201).json({ mensagem: "Produto cadastrado com sucesso!" });
   } catch (error) {
     return res.status(500).json(error.message);
   }

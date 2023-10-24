@@ -41,6 +41,16 @@ const validacaoProduto = joi.object({
             "number.base": "A campo categoria_id deve ser um número",
             "number.integer": "A campo categoria_id deve ser um número inteiro",
         }),
+    produto_imagem: joi
+        .string()
+        .required()
+        .regex(/.*\.(jpg|jpeg|png|gif|bmp)$/)
+        .messages({
+            "any.required": "O campo produto_imagem é obrigatório",
+            "string.empty": "O campo produto_imagem é obrigatório",
+            "string.pattern.base": "O campo produto_imagem deve conter um caminho de arquivo de imagem válido (com extensão .jpg, .jpeg, .png, .gif ou .bmp)."
+        })
+
 });
 
 module.exports = validacaoProduto;
