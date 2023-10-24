@@ -6,7 +6,7 @@ const validacaoPedido = joi.object({
     "number.base": "O campo cliente_id deve ser um número",
     "number.integer": "O campo cliente_id deve ser um número inteiro",
   }),
-  observacao: joi.string().max(255).messages({
+  observacao: joi.string().allow(null, "").max(255).messages({
     "string.max": "O campo observacao precisa ter, no máximo, 255 caracteres",
   }),
   pedido_produtos: joi
