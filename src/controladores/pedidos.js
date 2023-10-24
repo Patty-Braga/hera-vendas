@@ -33,6 +33,36 @@ const cadastrarPedido = async (req, res) => {
     if (estoqueValido.includes(false)) {
       res.status(422).json({ mensagem: "Estoque insuficiente!" });
     }
+    const pedido = await knex("pedidos")
+      .insert({
+        cliente_id,
+        observacao,
+      })
+      .returning("*");
+
+    let valorTotalPedido = 0;
+    for (let produtoPedido of pedido_produtos) {
+      const produto = await knex("produtos").where(
+        "id",
+        produtoPedido.produto_id
+      );
+      const pedidoProduto = await knex("pedido_produtos")
+        .insert({
+          pedido_id: pedido[0].id,
+          produto_id: produto[0].id,
+          quantidade_produto: produtoPedido.quantidade_produto,
+          valor_produto: produto[0].valor,
+        })
+        .returning("*");
+
+      valorTotalPedido +=
+        pedidoProduto[0].quantidade_produto * pedidoProduto[0].valor_produto;
+    }
+
+    await knex("pedidos")
+      .update("valor_total", valorTotalPedido)
+      .where("id", pedido[0].id)
+      .returning("*");
 
     return res.status(201).json({ mensagem: "Pedido cadastrado com sucesso!" });
   } catch (error) {
