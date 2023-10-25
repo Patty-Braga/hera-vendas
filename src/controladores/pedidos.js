@@ -70,13 +70,16 @@ const cadastrarPedido = async (req, res) => {
         pedidoProduto[0].quantidade_produto * pedidoProduto[0].valor_produto;
     }
 
-    await knex("pedidos")
+    const pedidoFinalizado = await knex("pedidos")
       .update("valor_total", valorTotalPedido)
       .where("id", pedido[0].id)
       .returning("*");
 
     const html = await compiladorHtml("./src/templates/pedidoConcluido.html", {
       nomeCliente: clienteExiste.nome,
+      numeroPedido: pedidoFinalizado[0].id,
+      valorTotal: pedidoFinalizado[0].valor_total,
+      observacao: pedidoFinalizado[0].observacao || "Sem Observações",
     });
 
     transportador.sendMail({

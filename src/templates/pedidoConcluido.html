@@ -14,11 +14,9 @@
       }
 
       .container {
-        max-width: 600px;
         margin: 0 auto;
         padding: 20px;
         background-color: #ffffff;
-        border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
 
@@ -26,39 +24,100 @@
         background-color: #007bff;
         color: #ffffff;
         text-align: center;
-        padding: 10px 0;
+        padding: 20px 0;
       }
 
       h1 {
         color: #ffffff;
+        font-size: 24px;
+        margin: 0;
+      }
+
+      main {
+        padding: 20px;
       }
 
       p {
         color: #333;
+        font-size: 16px;
       }
 
       strong {
         color: #007bff;
       }
+
+      .footer {
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        align-items: center;
+        justify-content: center;
+        background-color: #007bff;
+        color: #ffffff;
+        text-align: center;
+        bottom: 0;
+      }
+
+      .footer img {
+        width: 150px;
+      }
+
+      h3 {
+        font-size: 18px;
+        margin: 0;
+      }
+
+      h2 {
+        font-size: 24px;
+      }
+
+      .order-details {
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .product-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .product-list li {
+        margin: 10px 0;
+      }
     </style>
   </head>
 
   <body>
-    <div class="header">
-      <h1>Prezado(a) {{nomeCliente}},</h1>
+    <div class="container">
+      <div class="header">
+        <h1>Prezado(a) {{nomeCliente}},</h1>
+      </div>
+      <main>
+        <p>
+          Ficamos felizes em informar que o seu pedido número
+          <strong>{{numeroPedido}}</strong> foi efetuado com sucesso.
+        </p>
+        <p>Obrigado por escolher a Hera Vendas!</p>
+        <p>
+          Se você tiver alguma dúvida ou precisar de assistência, por favor, não
+          hesite em entrar em contato conosco.
+        </p>
+        <div class="order-details">
+          <h2><strong>Detalhes do Pedido</strong></h2>
+          <p><strong>Valor Total: </strong> R$: {{valorTotal}}</p>
+          <p><strong>Observação: </strong> {{observacao}}</p>
+        </div>
     </div>
-    <p>
-      Ficamos felizes em informar que o seu pedido número
-      <!-- <strong>{{numeroPedido}}</strong> foi efetuado com sucesso. -->
-    </p>
-    <p>Obrigado por escolher a Hera Vendas!</p>
-    <p>
-      Se você tiver alguma dúvida ou precisar de assistência, por favor, não
-      hesite em entrar em contato conosco.
-    </p>
+
     <div class="footer">
       <h3>Atenciosamente,</h3>
-      <h2><strong>Hera Vendas</strong></h2>
+      <img
+        src="https://heravendas.s3.us-east-005.backblazeb2.com/produtos/97/logo hera vendas.png"
+        alt="Heras Vendas"
+      />
     </div>
   </body>
+
 </html>
