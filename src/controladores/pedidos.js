@@ -78,7 +78,7 @@ const cadastrarPedido = async (req, res) => {
     const html = await compiladorHtml("./src/templates/pedidoConcluido.html", {
       nomeCliente: clienteExiste.nome,
       numeroPedido: pedidoFinalizado[0].id,
-      valorTotal: pedidoFinalizado[0].valor_total,
+      valorTotal: (pedidoFinalizado[0].valor_total / 100).toFixed(2),
       observacao: pedidoFinalizado[0].observacao || "Sem Observações",
     });
 

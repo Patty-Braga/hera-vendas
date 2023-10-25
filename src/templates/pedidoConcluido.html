@@ -47,20 +47,18 @@
       }
 
       .footer {
-        display: flex;
-        flex-direction: column;
-        padding: 15px;
-        align-items: center;
-        justify-content: center;
-        background-color: #007bff;
-        color: #ffffff;
-        text-align: center;
-        bottom: 0;
-      }
+      align-items: center;
+      justify-content: center;
+      background-color: #007bff;
+      color: #ffffff;
+      bottom: 0;
+      padding: 20px;
+  }
 
-      .footer img {
-        width: 150px;
-      }
+    .footer img {
+      width: 150px;
+    }
+
 
       h3 {
         font-size: 18px;
@@ -106,7 +104,7 @@
         </p>
         <div class="order-details">
           <h2><strong>Detalhes do Pedido</strong></h2>
-          <p><strong>Valor Total: </strong> R$: {{valorTotal}}</p>
+          <p><strong>Valor Total: </strong> R$ {{valorTotal}}</p>
           <p><strong>Observação: </strong> {{observacao}}</p>
         </div>
     </div>
@@ -115,7 +113,7 @@
       <h3>Atenciosamente,</h3>
       <img
         src="https://heravendas.s3.us-east-005.backblazeb2.com/produtos/97/logo hera vendas.png"
-        alt="Heras Vendas"
+        alt="Heras Vendas" 
       />
     </div>
   </body>

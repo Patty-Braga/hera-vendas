@@ -1,33 +1,41 @@
 const knex = require("../conexao");
 const { uploadImagem } = require("../upload");
 
-
 const cadastrarProduto = async (req, res) => {
   const { id } = req.usuario;
   const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
   let urlImagem = null;
 
   if (req.file) {
-    const { originalname, mimetype, buffer } = req.file
+    const { originalname, mimetype, buffer } = req.file;
 
     const ultimosCaracteres = originalname.slice(-4).toLowerCase();
 
-    if (ultimosCaracteres !== ".jpg" && ultimosCaracteres !== "jpeg" && ultimosCaracteres !== ".png" && ultimosCaracteres !== ".gif") {
-      return res.status(500).json({ mensagem: 'A imagem não possui uma extenção válida.' });
+    if (
+      ultimosCaracteres !== ".jpg" &&
+      ultimosCaracteres !== "jpeg" &&
+      ultimosCaracteres !== ".png" &&
+      ultimosCaracteres !== ".gif"
+    ) {
+      return res
+        .status(500)
+        .json({ mensagem: "A imagem não possui uma extenção válida." });
     }
 
     const imagem = await uploadImagem(
       `produtos/${id}/${originalname}`,
       buffer,
       mimetype
-    )
+    );
 
-    produto = await knex('produtos').update({
-      produto_imagem: imagem.url
-    }).where({ id }).returning('*')
+    produto = await knex("produtos")
+      .update({
+        produto_imagem: imagem.url,
+      })
+      .where({ id })
+      .returning("*");
 
-    urlImagem = imagem.url
-
+    urlImagem = imagem.url;
   }
 
   try {
@@ -62,9 +70,8 @@ const cadastrarProduto = async (req, res) => {
       valor,
       categoria_id,
       produto_imagem: urlImagem,
-    }
+    };
     return res.status(200).json(produtoCadastrado);
-
   } catch (error) {
     return res.status(500).json(error.message);
   }
@@ -76,21 +83,28 @@ const editarProduto = async (req, res) => {
   let urlImagem = null;
 
   if (req.file) {
-    const { originalname, mimetype, buffer } = req.file
+    const { originalname, mimetype, buffer } = req.file;
 
     const ultimosCaracteres = originalname.slice(-4).toLowerCase();
 
-    if (ultimosCaracteres !== ".jpg" && ultimosCaracteres !== "jpeg" && ultimosCaracteres !== ".png" && ultimosCaracteres !== ".gif") {
-      return res.status(500).json({ mensagem: 'A imagem não possui uma extenção válida.' });
+    if (
+      ultimosCaracteres !== ".jpg" &&
+      ultimosCaracteres !== "jpeg" &&
+      ultimosCaracteres !== ".png" &&
+      ultimosCaracteres !== ".gif"
+    ) {
+      return res
+        .status(500)
+        .json({ mensagem: "A imagem não possui uma extenção válida." });
     }
 
     const imagem = await uploadImagem(
       `produtos/${id}/${originalname}`,
       buffer,
       mimetype
-    )
+    );
 
-    urlImagem = imagem.url
+    urlImagem = imagem.url;
   }
 
   try {
@@ -115,21 +129,23 @@ const editarProduto = async (req, res) => {
       urlImagem = produto.produto_imagem;
     }
 
-    await knex('produtos').update({
-      descricao: descricao.trim(),
-      quantidade_estoque,
-      valor,
-      categoria_id,
-      produto_imagem: urlImagem
-    }).where({ id })
+    await knex("produtos")
+      .update({
+        descricao: descricao.trim(),
+        quantidade_estoque,
+        valor,
+        categoria_id,
+        produto_imagem: urlImagem,
+      })
+      .where({ id });
 
     const produtoEditado = {
       descricao,
       quantidade_estoque,
       valor,
       categoria_id,
-      produto_imagem: urlImagem
-    }
+      produto_imagem: urlImagem,
+    };
 
     return res.status(201).json(produtoEditado);
   } catch (error) {
@@ -189,23 +205,29 @@ const excluirProduto = async (req, res) => {
     const produto = await knex("produtos").where({ id }).first();
 
     if (!produto) {
-      return res.status(404).json({ error: "Produto não encontrado" });
+      return res.status(404).json({ mensagem: "Produto não encontrado" });
     }
 
-    const produtoRegistradoPedido = await knex("pedido_produtos").where({ produto_id: id }).first();
+    const produtoRegistradoPedido = await knex("pedido_produtos")
+      .where({ produto_id: id })
+      .first();
 
     if (produtoRegistradoPedido) {
-      return res.status(400).json({ error: "Não é possível excluir o produto, pois ele está vinculado a um pedido." });
+      return res
+        .status(400)
+        .json({
+          mensagem:
+            "Não é possível excluir o produto, pois ele está vinculado a um pedido.",
+        });
     }
 
     await knex("produtos").where({ id }).del();
 
-    return res.status(200).json({ message: "Produto excluído com sucesso" });
+    return res.status(200).json({ mensagem: "Produto excluído com sucesso" });
   } catch (error) {
     return res.status(500).json(error.message);
   }
 };
-
 
 module.exports = {
   cadastrarProduto,
