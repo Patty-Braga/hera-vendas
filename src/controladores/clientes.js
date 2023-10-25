@@ -105,6 +105,7 @@ const editarCliente = async (req, res) => {
       .where("cpf", cpf)
       .whereNot("id", id)
       .first();
+
     if (cpfExiste) {
       return res
         .status(400)
