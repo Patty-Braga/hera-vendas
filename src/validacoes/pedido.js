@@ -18,9 +18,11 @@ const validacaoPedido = joi.object({
           "number.base": "O campo produto_id deve ser um número",
           "number.integer": "O campo produto_id deve ser um número inteiro",
         }),
-        quantidade_produto: joi.number().integer().required().messages({
+        quantidade_produto: joi.number().min(1).integer().required().messages({
           "any.required": "O campo quantidade_produto é obrigatório",
           "number.base": "O campo quantidade_produto deve ser um número",
+          "number.min":
+            "O campo quantidade_produto deve ser maior ou igual a 1",
           "number.integer":
             "O campo quantidade_produto deve ser um número inteiro",
         }),

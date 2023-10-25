@@ -35,16 +35,6 @@ const cadastrarPedido = async (req, res) => {
     if (estoqueValido.includes(false)) {
       return res.status(422).json({ mensagem: "Estoque insuficiente!" });
     }
-    const html = await compiladorHtml("./src/templates/pedidoConcluido.html", {
-      nomeCliente: clienteExiste.nome,
-    });
-
-    transportador.sendMail({
-      from: `${process.env.EMAIL_NAME} <${process.env.EMAIL_FROM}>`,
-      to: `${clienteExiste.nome} <${clienteExiste.email}>`,
-      subject: "Tentativa de Login",
-      html,
-    });
 
     const pedido = await knex("pedidos")
       .insert({
@@ -85,7 +75,18 @@ const cadastrarPedido = async (req, res) => {
       .where("id", pedido[0].id)
       .returning("*");
 
-    return res.status(201).json({ mensagem: "Pedido cadastrado com sucesso!" });
+    const html = await compiladorHtml("./src/templates/pedidoConcluido.html", {
+      nomeCliente: clienteExiste.nome,
+    });
+
+    transportador.sendMail({
+      from: `${process.env.EMAIL_NAME} <${process.env.EMAIL_FROM}>`,
+      to: `${clienteExiste.nome} <${clienteExiste.email}>`,
+      subject: "Pedido Realizado com Sucesso",
+      html,
+    });
+
+    return res.status(201).json({ mensagem: "Pedido realizado com sucesso!" });
   } catch (error) {
     return res.status(500).json(error.message);
   }
@@ -110,6 +111,13 @@ const listarPedidos = async (req, res) => {
         )
         .where("cliente_id", cliente_id);
 
+      if (pedidos.length === 0) {
+        return res.status(404).json({
+          mensagem:
+            "Não existem pedidos para o cliente informado ou o cliente não está cadastrado",
+        });
+      }
+
       const produtos = pedidos.map((pedido) => ({
         id: pedido.produto_id,
         quantidade_produto: pedido.quantidade_produto,
@@ -117,37 +125,42 @@ const listarPedidos = async (req, res) => {
         produto_id: pedido.produto_id,
       }));
 
-      return res.json([{
-        pedido: {
-          pedido_id: pedidos[0].pedido_id,
-          valor_total: pedidos[0].valor_total,
-          observacao: pedidos[0].observacao,
-          cliente_id: pedidos[0].cliente_id,
+      return res.status(200).json([
+        {
+          pedido: {
+            id: pedidos[0].pedido_id,
+            valor_total: pedidos[0].valor_total,
+            observacao: pedidos[0].observacao,
+            cliente_id: pedidos[0].cliente_id,
+          },
+          pedido_produtos: produtos,
         },
-        pedido_produtos: produtos,
-      }]);
+      ]);
     } else {
-      const pedidos = await knex.select("id", 
-      "valor_total",
-      "observacao",
-      "cliente_id").from("pedidos");
+      const pedidos = await knex
+        .select("id", "valor_total", "observacao", "cliente_id")
+        .from("pedidos");
 
       const pedidosEProdutos = pedidos.map((pedido) => ({
         pedido: pedido,
-        pedido_produtos: []
+        pedido_produtos: [],
       }));
-      
-      for(let pedido of pedidosEProdutos){
-        const produtos = await knex.select("id", 
-        "quantidade_produto", 
-        "valor_produto", 
-        "pedido_id", 
-        "produto_id")
-        .from("pedido_produtos").where("pedido_id", pedido.pedido.id);
+
+      for (let pedido of pedidosEProdutos) {
+        const produtos = await knex
+          .select(
+            "id",
+            "quantidade_produto",
+            "valor_produto",
+            "pedido_id",
+            "produto_id"
+          )
+          .from("pedido_produtos")
+          .where("pedido_id", pedido.pedido.id);
         pedido.pedido_produtos = produtos;
       }
 
-      return res.json(pedidosEProdutos);
+      return res.status(200).json(pedidosEProdutos);
     }
   } catch (error) {
     return res.status(500).json(error.message);
