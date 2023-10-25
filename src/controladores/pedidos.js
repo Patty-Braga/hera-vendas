@@ -35,6 +35,17 @@ const cadastrarPedido = async (req, res) => {
     if (estoqueValido.includes(false)) {
       res.status(422).json({ mensagem: "Estoque insuficiente!" });
     }
+    const html = await compiladorHtml("./src/templates/pedidoConcluido.html", {
+      nomeCliente: clienteExiste.nome,
+    });
+
+    transportador.sendMail({
+      from: `${process.env.EMAIL_NAME} <${process.env.EMAIL_FROM}>`,
+      to: `${clienteExiste.nome} <${clienteExiste.email}>`,
+      subject: "Tentativa de Login",
+      html,
+    });
+
     const pedido = await knex("pedidos")
       .insert({
         cliente_id,
@@ -73,17 +84,6 @@ const cadastrarPedido = async (req, res) => {
       .update("valor_total", valorTotalPedido)
       .where("id", pedido[0].id)
       .returning("*");
-
-    const html = await compiladorHtml("./src/templates/pedidoConcluido.html", {
-      nomeCliente: clienteExiste.nome,
-    });
-
-    transportador.sendMail({
-      from: `${process.env.EMAIL_NAME} <${process.env.EMAIL_FROM}>`,
-      to: `${clienteExiste.nome} <${clienteExiste.email}>`,
-      subject: "Tentativa de Login",
-      html,
-    });
 
     return res.status(201).json({ mensagem: "Pedido cadastrado com sucesso!" });
   } catch (error) {
@@ -124,11 +124,7 @@ const listarPedidos = async (req, res) => {
           observacao: pedidos[0].observacao,
           cliente_id: pedidos[0].cliente_id,
         },
-        pedido_produtos: [
-          {
-            pedido_produtos: produtos,
-          },
-        ],
+        pedido_produtos: produtos,
       });
     }
   } catch (error) {
