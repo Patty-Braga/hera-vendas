@@ -23,6 +23,13 @@ const uploadImagem = async (path, buffer, mimetype) => {
         url: `https://${process.env.BUCKET_NAME}.${process.env.ENDPOINT_BACKBLAZE}/${imagem.Key}`
     }
 }
+
+const excluirImagem = async (path) => {
+    const nomeImagem = path.split('/').pop();
+    await s3.deleteObject({ Bucket: process.env.BUCKET_NAME, Key: nomeImagem }).promise();
+};
+
 module.exports = {
     uploadImagem,
+    excluirImagem,
 }
