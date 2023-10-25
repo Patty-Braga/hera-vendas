@@ -117,7 +117,7 @@ const listarPedidos = async (req, res) => {
         produto_id: pedido.produto_id,
       }));
 
-      return res.json({
+      return res.json([{
         pedido: {
           pedido_id: pedidos[0].pedido_id,
           valor_total: pedidos[0].valor_total,
@@ -125,7 +125,29 @@ const listarPedidos = async (req, res) => {
           cliente_id: pedidos[0].cliente_id,
         },
         pedido_produtos: produtos,
-      });
+      }]);
+    } else {
+      const pedidos = await knex.select("id", 
+      "valor_total",
+      "observacao",
+      "cliente_id").from("pedidos");
+
+      const pedidosEProdutos = pedidos.map((pedido) => ({
+        pedido: pedido,
+        pedido_produtos: []
+      }));
+      
+      for(let pedido of pedidosEProdutos){
+        const produtos = await knex.select("id", 
+        "quantidade_produto", 
+        "valor_produto", 
+        "pedido_id", 
+        "produto_id")
+        .from("pedido_produtos").where("pedido_id", pedido.pedido.id);
+        pedido.pedido_produtos = produtos;
+      }
+
+      return res.json(pedidosEProdutos);
     }
   } catch (error) {
     return res.status(500).json(error.message);
