@@ -2,7 +2,9 @@ const knex = require("../conexao");
 
 const listarCategorias = async (req, res) => {
   try {
-    const categorias = await knex.select("*").from("categorias");
+    const categorias = await knex
+      .select("descricao as categoria")
+      .from("categorias");
 
     return res.status(200).json(categorias);
   } catch (error) {
@@ -10,4 +12,4 @@ const listarCategorias = async (req, res) => {
   }
 };
 
-module.exports = { listarCategorias };
+module.exports = listarCategorias;
