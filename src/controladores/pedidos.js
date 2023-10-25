@@ -1,4 +1,6 @@
+const transportador = require("../services/nodemailer");
 const knex = require("../conexao");
+const compiladorHtml = require("../utils/compiladorHtml");
 
 const cadastrarPedido = async (req, res) => {
   const { cliente_id, pedido_produtos, observacao } = req.body;
@@ -55,6 +57,14 @@ const cadastrarPedido = async (req, res) => {
         })
         .returning("*");
 
+      await knex("produtos")
+        .where("id", produtoPedido.produto_id)
+        .update({
+          quantidade_estoque: knex.raw("quantidade_estoque - ?", [
+            produtoPedido.quantidade_produto,
+          ]),
+        });
+
       valorTotalPedido +=
         pedidoProduto[0].quantidade_produto * pedidoProduto[0].valor_produto;
     }
@@ -63,6 +73,17 @@ const cadastrarPedido = async (req, res) => {
       .update("valor_total", valorTotalPedido)
       .where("id", pedido[0].id)
       .returning("*");
+
+    const html = await compiladorHtml("./src/templates/pedidoConcluido.html", {
+      nomeCliente: clienteExiste.nome,
+    });
+
+    transportador.sendMail({
+      from: `${process.env.EMAIL_NAME} <${process.env.EMAIL_FROM}>`,
+      to: `${clienteExiste.nome} <${clienteExiste.email}>`,
+      subject: "Tentativa de Login",
+      html,
+    });
 
     return res.status(201).json({ mensagem: "Pedido cadastrado com sucesso!" });
   } catch (error) {
@@ -106,15 +127,14 @@ const listarPedidos = async (req, res) => {
         pedido_produtos: [
           {
             pedido_produtos: produtos,
-          }
-        ]
+          },
+        ],
       });
     }
   } catch (error) {
     return res.status(500).json(error.message);
   }
 };
-
 
 module.exports = {
   cadastrarPedido,
