@@ -71,9 +71,27 @@ const cadastrarProduto = async (req, res) => {
 };
 
 const editarProduto = async (req, res) => {
-  const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
-  const { originalname, mimetype, buffer } = req.file
   const { id } = req.params;
+  const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
+  let urlImagem = null;
+
+  if (req.file) {
+    const { originalname, mimetype, buffer } = req.file
+
+    const ultimosCaracteres = originalname.slice(-4).toLowerCase();
+
+    if (ultimosCaracteres !== ".jpg" && ultimosCaracteres !== "jpeg" && ultimosCaracteres !== ".png" && ultimosCaracteres !== ".gif") {
+      return res.status(500).json({ mensagem: 'A imagem não possui uma extenção válida.' });
+    }
+
+    const imagem = await uploadImagem(
+      `produtos/${id}/${originalname}`,
+      buffer,
+      mimetype
+    )
+
+    urlImagem = imagem.url
+  }
 
   try {
     const produto = await knex("produtos").where({ id }).first();
@@ -93,32 +111,22 @@ const editarProduto = async (req, res) => {
         .json({ mensagem: "Descrição pertence a outro produto" });
     }
 
-    const ultimosCaracteres = originalname.slice(-4).toLowerCase();
 
-    if (ultimosCaracteres !== ".jpg" && ultimosCaracteres !== "jpeg" && ultimosCaracteres !== ".png" && ultimosCaracteres !== ".gif") {
-      return res.status(500).json({ mensagem: 'A imagem não possui uma extenção válida.' });
-    }
-
-    const imagem = await uploadImagem(
-      `produtos/${id}/${originalname}`,
-      buffer,
-      mimetype
-    )
 
     await knex('produtos').update({
       descricao: descricao.trim(),
       quantidade_estoque,
       valor,
       categoria_id,
-      produto_imagem: imagem.url
-    }).where({ id }).returning('*')
+      produto_imagem: urlImagem
+    }).where({ id })
 
     const produtoEditado = {
       descricao,
       quantidade_estoque,
       valor,
       categoria_id,
-      produto_imagem: imagem.url
+      produto_imagem: urlImagem
     }
 
     return res.status(201).json(produtoEditado);
