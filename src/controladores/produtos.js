@@ -5,8 +5,30 @@ const { uploadImagem } = require("../upload");
 const cadastrarProduto = async (req, res) => {
   const { id } = req.usuario;
   const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
-  const { originalname, mimetype, buffer } = req.file
+  let urlImagem = null;
 
+  if (req.file) {
+    const { originalname, mimetype, buffer } = req.file
+
+    const ultimosCaracteres = originalname.slice(-4).toLowerCase();
+
+    if (ultimosCaracteres !== ".jpg" && ultimosCaracteres !== "jpeg" && ultimosCaracteres !== ".png" && ultimosCaracteres !== ".gif") {
+      return res.status(500).json({ mensagem: 'A imagem não possui uma extenção válida.' });
+    }
+
+    const imagem = await uploadImagem(
+      `produtos/${id}/${originalname}`,
+      buffer,
+      mimetype
+    )
+
+    produto = await knex('produtos').update({
+      produto_imagem: imagem.url
+    }).where({ id }).returning('*')
+
+    urlImagem = imagem.url
+
+  }
 
   try {
     const quantidadeCategoria = await knex("categorias");
@@ -26,40 +48,23 @@ const cadastrarProduto = async (req, res) => {
       });
     }
 
-    let produto = await knex("produtos").insert({
+    await knex("produtos").insert({
       descricao: descricao.trim(),
       quantidade_estoque,
       valor,
       categoria_id,
-    }).returning('*');
-
-    const id = produto[0].id
-
-    const ultimosCaracteres = originalname.slice(-4).toLowerCase();
-
-    if (ultimosCaracteres !== ".jpg" && ultimosCaracteres !== "jpeg" && ultimosCaracteres !== ".png" && ultimosCaracteres !== ".gif") {
-      return res.status(500).json({ mensagem: 'A imagem não possui uma extenção válida.' });
-    }
-
-    const imagem = await uploadImagem(
-      `produtos/${id}/${originalname}`,
-      buffer,
-      mimetype
-    )
-
-    produto = await knex('produtos').update({
-      produto_imagem: imagem.url
-    }).where({ id }).returning('*')
+      produto_imagem: urlImagem,
+    });
 
     const produtoCadastrado = {
       descricao,
       quantidade_estoque,
       valor,
       categoria_id,
-      produto_imagem: imagem.url
+      produto_imagem: urlImagem,
     }
-
     return res.status(200).json(produtoCadastrado);
+
   } catch (error) {
     return res.status(500).json(error.message);
   }

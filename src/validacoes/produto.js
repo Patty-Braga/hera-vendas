@@ -33,6 +33,7 @@ const validacaoProduto = joi.object({
     "number.base": "A campo categoria_id deve ser um número",
     "number.integer": "A campo categoria_id deve ser um número inteiro",
   }),
+  produto_imagem: joi.string().empty("").optional(),
 });
 
 module.exports = {
