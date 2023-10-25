@@ -192,6 +192,12 @@ const excluirProduto = async (req, res) => {
       return res.status(404).json({ error: "Produto não encontrado" });
     }
 
+    const produtoRegistradoPedido = await knex("pedido_produtos").where({ produto_id: id }).first();
+
+    if (produtoRegistradoPedido) {
+      return res.status(400).json({ error: "Não é possível excluir o produto, pois ele está vinculado a um pedido." });
+    }
+
     await knex("produtos").where({ id }).del();
 
     return res.status(200).json({ message: "Produto excluído com sucesso" });
@@ -199,6 +205,7 @@ const excluirProduto = async (req, res) => {
     return res.status(500).json(error.message);
   }
 };
+
 
 module.exports = {
   cadastrarProduto,
