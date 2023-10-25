@@ -33,7 +33,7 @@ const cadastrarPedido = async (req, res) => {
     });
 
     if (estoqueValido.includes(false)) {
-      res.status(422).json({ mensagem: "Estoque insuficiente!" });
+      return res.status(422).json({ mensagem: "Estoque insuficiente!" });
     }
     const html = await compiladorHtml("./src/templates/pedidoConcluido.html", {
       nomeCliente: clienteExiste.nome,
