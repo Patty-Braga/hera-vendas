@@ -111,7 +111,9 @@ const editarProduto = async (req, res) => {
         .json({ mensagem: "Descrição pertence a outro produto" });
     }
 
-
+    if (produto.produto_imagem && !urlImagem) {
+      urlImagem = produto.produto_imagem;
+    }
 
     await knex('produtos').update({
       descricao: descricao.trim(),
