@@ -1,5 +1,4 @@
 const knex = require("../conexao");
-const { validarCadastro, validacaoCadastrarProduto } = require('../validacoes/validaUpload')
 const { uploadImagem } = require("../upload");
 
 
@@ -10,7 +9,6 @@ const cadastrarProduto = async (req, res) => {
 
 
   try {
-    await validarCadastro(validacaoCadastrarProduto, req, res)
     const quantidadeCategoria = await knex("categorias");
 
     const produtoExiste = await knex("produtos")
@@ -36,6 +34,12 @@ const cadastrarProduto = async (req, res) => {
     }).returning('*');
 
     const id = produto[0].id
+
+    const ultimosCaracteres = originalname.slice(-4).toLowerCase();
+
+    if (ultimosCaracteres !== ".jpg" && ultimosCaracteres !== "jpeg" && ultimosCaracteres !== ".png" && ultimosCaracteres !== ".gif") {
+      return res.status(500).json({ mensagem: 'A imagem não possui uma extenção válida.' });
+    }
 
     const imagem = await uploadImagem(
       `produtos/${id}/${originalname}`,
@@ -63,6 +67,7 @@ const cadastrarProduto = async (req, res) => {
 
 const editarProduto = async (req, res) => {
   const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
+  const { originalname, mimetype, buffer } = req.file
   const { id } = req.params;
 
   try {
@@ -83,14 +88,35 @@ const editarProduto = async (req, res) => {
         .json({ mensagem: "Descrição pertence a outro produto" });
     }
 
-    await knex("produtos").where({ id }).update({
+    const ultimosCaracteres = originalname.slice(-4).toLowerCase();
+
+    if (ultimosCaracteres !== ".jpg" && ultimosCaracteres !== "jpeg" && ultimosCaracteres !== ".png" && ultimosCaracteres !== ".gif") {
+      return res.status(500).json({ mensagem: 'A imagem não possui uma extenção válida.' });
+    }
+
+    const imagem = await uploadImagem(
+      `produtos/${id}/${originalname}`,
+      buffer,
+      mimetype
+    )
+
+    await knex('produtos').update({
       descricao: descricao.trim(),
       quantidade_estoque,
       valor,
       categoria_id,
-    });
+      produto_imagem: imagem.url
+    }).where({ id }).returning('*')
 
-    return res.status(201).json({ mensagem: "Produto alterado com sucesso!" });
+    const produtoEditado = {
+      descricao,
+      quantidade_estoque,
+      valor,
+      categoria_id,
+      produto_imagem: imagem.url
+    }
+
+    return res.status(201).json(produtoEditado);
   } catch (error) {
     return res.status(500).json(error.message);
   }

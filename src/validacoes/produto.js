@@ -1,6 +1,6 @@
 const joi = require("joi");
 
-const validacaoEditarProduto = joi.object({
+const validacaoProduto = joi.object({
     descricao: joi
         .string()
         .min(5)
@@ -44,5 +44,5 @@ const validacaoEditarProduto = joi.object({
 });
 
 module.exports = {
-    validacaoEditarProduto
+    validacaoProduto,
 };
