@@ -57,6 +57,14 @@ const cadastrarPedido = async (req, res) => {
         })
         .returning("*");
 
+      await knex("produtos")
+        .where("id", produtoPedido.produto_id)
+        .update({
+          quantidade_estoque: knex.raw("quantidade_estoque - ?", [
+            produtoPedido.quantidade_produto,
+          ]),
+        });
+
       valorTotalPedido +=
         pedidoProduto[0].quantidade_produto * pedidoProduto[0].valor_produto;
     }
@@ -119,15 +127,14 @@ const listarPedidos = async (req, res) => {
         pedido_produtos: [
           {
             pedido_produtos: produtos,
-          }
-        ]
+          },
+        ],
       });
     }
   } catch (error) {
     return res.status(500).json(error.message);
   }
 };
-
 
 module.exports = {
   cadastrarPedido,
