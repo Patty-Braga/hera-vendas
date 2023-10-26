@@ -122,7 +122,7 @@ const listarPedidos = async (req, res) => {
       }
 
       const produtos = pedidos.map((pedido) => ({
-        id: pedido.produto_id,
+        id: pedido.pedido_id,
         quantidade_produto: pedido.quantidade_produto,
         valor_produto: pedido.valor_produto,
         produto_id: pedido.produto_id,
