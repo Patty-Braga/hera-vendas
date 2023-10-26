@@ -52,7 +52,10 @@ const cadastrarCliente = async (req, res) => {
 
 const listarClientes = async (req, res) => {
   try {
-    const clientes = await knex.select("*").from("clientes");
+    const clientes = await knex
+      .select("*")
+      .from("clientes")
+      .orderBy("id", "asc");
 
     return res.status(200).json(clientes);
   } catch (error) {

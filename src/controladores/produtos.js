@@ -172,10 +172,10 @@ const listarProdutos = async (req, res) => {
           mensagem: "Categoria não encontrada",
         });
       }
-      query.where("categoria_id", categoria_id);
+      query.where("categoria_id", categoria_id).orderBy("id", "asc");
     }
 
-    const listaProdutos = await query;
+    const listaProdutos = await query.orderBy("id", "asc");
     return res.status(200).json(listaProdutos);
   } catch (error) {
     return res.status(500).json(error.message);
