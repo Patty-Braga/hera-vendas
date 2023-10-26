@@ -28,6 +28,8 @@ const cadastrarProduto = async (req, res) => {
       mimetype
     );
 
+    console.log(imagem.path);
+
     produto = await knex("produtos")
       .update({
         produto_imagem: imagem.url,
@@ -36,6 +38,7 @@ const cadastrarProduto = async (req, res) => {
       .returning("*");
 
     urlImagem = imagem.url;
+    pathImagem = imagem.path;
   }
 
   try {
@@ -220,8 +223,8 @@ const excluirProduto = async (req, res) => {
     }
 
     if (produto.produto_imagem) {
-      console.log("cheguei aq");
-      await excluirImagem(produto.produto_imagem);
+      const posicaoCorteUrl = produto.produto_imagem.search(".com/") + 5;
+      await excluirImagem(produto.produto_imagem.slice(posicaoCorteUrl));
     }
 
     await knex("produtos").where({ id }).del();
