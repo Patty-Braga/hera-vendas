@@ -1,5 +1,5 @@
 const knex = require("../conexao");
-const { uploadImagem } = require("../upload");
+const { uploadImagem, excluirImagem } = require("../upload");
 
 const cadastrarProduto = async (req, res) => {
   const { id } = req.usuario;
@@ -213,15 +213,14 @@ const excluirProduto = async (req, res) => {
       .first();
 
     if (produtoRegistradoPedido) {
-      return res
-        .status(400)
-        .json({
-          mensagem:
-            "Não é possível excluir o produto, pois ele está vinculado a um pedido.",
-        });
+      return res.status(400).json({
+        mensagem:
+          "Não é possível excluir o produto, pois ele está vinculado a um pedido.",
+      });
     }
 
     if (produto.produto_imagem) {
+      console.log("cheguei aq");
       await excluirImagem(produto.produto_imagem);
     }
 
