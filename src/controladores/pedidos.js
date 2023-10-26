@@ -39,7 +39,7 @@ const cadastrarPedido = async (req, res) => {
     const pedido = await knex("pedidos")
       .insert({
         cliente_id,
-        observacao,
+        observacao: observacao || "Sem observação",
       })
       .returning("*");
 
@@ -107,7 +107,7 @@ const listarPedidos = async (req, res) => {
           "pedidos.valor_total",
           "pedidos.observacao",
           "pedidos.cliente_id",
-          "pedido_produtos.id as produto_id",
+          "pedido_produtos.id as pedido_individual_id",
           "pedido_produtos.quantidade_produto",
           "pedido_produtos.valor_produto",
           "pedido_produtos.produto_id"
@@ -122,10 +122,11 @@ const listarPedidos = async (req, res) => {
       }
 
       const produtos = pedidos.map((pedido) => ({
-        id: pedido.pedido_id,
+        id: pedido.pedido_individual_id,
         quantidade_produto: pedido.quantidade_produto,
         valor_produto: pedido.valor_produto,
         produto_id: pedido.produto_id,
+        pedido_id: pedido.pedido_id,
       }));
 
       const valorTotalPedidos = pedidos.map((pedido) => {
