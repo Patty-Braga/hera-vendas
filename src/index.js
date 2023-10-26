@@ -9,6 +9,6 @@ app.use(express.json());
 app.use(cors());
 app.use(rotas);
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3003
 
 app.listen(port, () => console.log(`Servidor on na porta: ${port} 🚀`))
