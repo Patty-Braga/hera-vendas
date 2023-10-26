@@ -4,7 +4,7 @@
   "description": "Sistema de PDV desenvolvido em equipe como projeto final do Curso de Desenvolvimento Back-end da Cubos Academy.",
   "main": "./src/index.js",
   "scripts": {
-    "start": "node ./src/index.js",
+    "start": "node index.js",
     "dev": "nodemon ./src/index.js"
   },
   "keywords": [],
