@@ -1,6 +1,6 @@
 const transportador = require("../services/nodemailer");
 const knex = require("../conexao");
-const compiladorHtml = require("../utils/compiladorHtml");
+const compiladorHtml = require("../utils/compiladorHTML.js");
 
 const cadastrarPedido = async (req, res) => {
   const { cliente_id, pedido_produtos, observacao } = req.body;
