@@ -128,11 +128,17 @@ const listarPedidos = async (req, res) => {
         produto_id: pedido.produto_id,
       }));
 
+      const valorTotalPedidos = pedidos.map((pedido) => {
+        return pedido.valor_total;
+      });
+
       return res.status(200).json([
         {
           pedido: {
             id: pedidos[0].pedido_id,
-            valor_total: pedidos[0].valor_total,
+            valor_total: valorTotalPedidos.reduce((a, b) => {
+              return a + b;
+            }),
             observacao: pedidos[0].observacao,
             cliente_id: pedidos[0].cliente_id,
           },
