@@ -20,13 +20,16 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
 
-      .header {
+      .header, .footer {
         background-color: #007bff;
         color: #ffffff;
         text-align: center;
         padding: 20px 0;
       }
 
+      .footer {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
       h1 {
         color: #ffffff;
         font-size: 24px;
@@ -46,14 +49,6 @@
         color: #007bff;
       }
 
-      .footer {
-      align-items: center;
-      justify-content: center;
-      background-color: #007bff;
-      color: #ffffff;
-      bottom: 0;
-      padding: 20px;
-  }
 
     .footer img {
       width: 150px;
@@ -69,6 +64,10 @@
         font-size: 24px;
       }
 
+      .centralizarimg {
+            display: block;
+            margin: 0 auto;
+        }
       .order-details {
         background-color: #f9f9f9;
         padding: 15px;
@@ -110,11 +109,14 @@
     </div>
 
     <div class="footer">
-      <h3>Atenciosamente,</h3>
-      <img
-        src="https://heravendas.s3.us-east-005.backblazeb2.com/produtos/97/logo hera vendas.png"
-        alt="Heras Vendas" 
-      />
+      <h3 style="text-align: center;">Atenciosamente,</h3>
+      <div style="text-align: center;">
+        <img
+            src="https://heravendas.s3.us-east-005.backblazeb2.com/produtos/97/logo%20hera%20vendas.png"
+            alt="Heras Vendas"
+            class="centralizarimg" 
+        />
+    </div>
     </div>
   </body>
 
